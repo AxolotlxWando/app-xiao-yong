@@ -82,7 +82,7 @@
     "xy-modules/**/client-react-native",
     "xy-modules/**/common",
     "xy-modules/**/common-react",
-    "xy-modules/**/server-ts",
+    "xy-modules/**/server-ts"
   ],
   "greenkeeper": {
     "ignore": [
