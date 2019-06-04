@@ -1,7 +1,8 @@
 import core from '@gqlapp/core-client-react';
 import look from '@gqlapp/look-client-react';
 import i18n from '@gqlapp/i18n-client-react';
-import counter from '@app-xiao-yong/app-workflow-client-react';
+import appCounter from '@app-xiao-yong/app-workflow-client-react';
+import counter from '@gqlapp/counter-client-react';
 import chat from '@gqlapp/chat-client-react';
 import contact from '@gqlapp/contact-client-react';
 import validation from '@gqlapp/validation-common-react';
@@ -22,6 +23,7 @@ const modules = new ClientModule(
   look,
   validation,
   defaultRouter,
+  appCounter,
   counter,
   post,
   upload,
