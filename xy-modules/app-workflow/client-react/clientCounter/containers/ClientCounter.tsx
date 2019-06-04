@@ -2,7 +2,7 @@ import React from 'react';
 import { Mutation, Query, MutationFn } from 'react-apollo';
 
 import { ClientCounterButton, ClientCounterView } from '../components/ClientCounterView';
-import { COUNTER_QUERY_CLIENT, ADD_COUNTER_CLIENT } from '@app-xiao-yong/counter-common';
+import { COUNTER_QUERY_CLIENT, ADD_COUNTER_CLIENT } from '@app-xiao-yong/app-workflow-common';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 
 interface ButtonProps {

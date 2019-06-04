@@ -1,5 +1,5 @@
 import { getApollo } from '@gqlapp/testing-server-ts';
-import { COUNTER_QUERY, ADD_COUNTER, COUNTER_SUBSCRIPTION } from '@app-xiao-yong/counter-common';
+import { COUNTER_QUERY, ADD_COUNTER, COUNTER_SUBSCRIPTION } from '@app-xiao-yong/app-workflow-common';
 
 describe('Counter example API works', () => {
   let apollo: any;

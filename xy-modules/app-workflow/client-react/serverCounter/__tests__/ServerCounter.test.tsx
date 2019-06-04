@@ -4,7 +4,7 @@ import { render } from 'react-testing-library';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import { click, find, Renderer } from '@gqlapp/testing-client-react';
-import { COUNTER_SUBSCRIPTION } from '@app-xiao-yong/counter-common';
+import { COUNTER_SUBSCRIPTION } from '@app-xiao-yong/app-workflow-common';
 
 import ServerCounter from '../containers/ServerCounter';
 

@@ -1,6 +1,6 @@
 import core from '@gqlapp/core-client-react-native';
 import i18n from '@gqlapp/i18n-client-react';
-import counter from '@app-xiao-yong/counter-client-react';
+import counter from '@app-xiao-yong/app-workflow-client-react';
 import chat from '@gqlapp/chat-client-react';
 import contact from '@gqlapp/contact-client-react';
 import validation from '@gqlapp/validation-common-react';

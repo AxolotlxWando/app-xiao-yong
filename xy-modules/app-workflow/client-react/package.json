@@ -1,0 +1,8 @@
+{
+  "name": "@app-xiao-yong/app-workflow-client-react",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@app-xiao-yong/app-workflow-common": "^0.0.1"
+  }
+}
