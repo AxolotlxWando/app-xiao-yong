@@ -1,5 +1,6 @@
 export { default as app } from './app';
 export { default as db } from './db';
+export { default as dbNeo4j } from './dbNeo4j';
 export { default as engine } from './engine';
 export { default as rest } from './rest';
 export { default as mailer } from './mailer';
