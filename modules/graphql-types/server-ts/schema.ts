@@ -6,4 +6,6 @@ export default gql`
   scalar Time
 
   scalar DateTime
+
+  scalar JSON
 `;
