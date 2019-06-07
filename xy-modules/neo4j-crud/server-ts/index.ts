@@ -6,6 +6,6 @@ import createResolvers from './resolvers';
 
 export default new ServerModule({
   schema: [schema],
-  // createResolversFunc: [createResolvers],
-  createContextFunc: [() => ({ Post: new Neo4jCrud() })]
+  createResolversFunc: [createResolvers],
+  createContextFunc: [() => ({ Neo4jCrud: new Neo4jCrud() })]
 });
