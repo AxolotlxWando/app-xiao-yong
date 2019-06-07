@@ -12,7 +12,7 @@ function testConnection(neo4jDriver) {
   log.info(`Connecting to Neo4j...`);
   const session = neo4jDriver.session();
   return session
-    .run('RETURN apoc.versions();')
+    .run('RETURN apoc.version();')
     .then(result => {
       session.close();
       const test = result.records[0].get('apoc.version()');
@@ -23,9 +23,11 @@ function testConnection(neo4jDriver) {
       }
       return 0;
     })
-    .catch(() => {
+    .catch(error => {
       session.close();
-      throw new Error(`Connection to Neo4j seemed to succeed at: ${host} but APOC doesn't seem to be installed.`);
+      throw new Error(
+        `Connection to Neo4j seemed to succeed at: ${host} but APOC doesn't seem to be installed (${error}).`
+      );
     });
 }
 
@@ -35,20 +37,20 @@ if (!host || !user || !password) {
   );
 }
 
-let neo4jDriver;
+let _neo4jDriver;
 
 try {
-  neo4jDriver = neo4j.driver(host, neo4j.auth.basic(user, password), {
+  _neo4jDriver = neo4j.driver(host, neo4j.auth.basic(user, password), {
     disableLosslessIntegers: true
   });
-  testConnection(neo4jDriver);
+  testConnection(_neo4jDriver);
 } catch (error) {
   throw new Error(
     `Connection to Neo4j database failed, check your Neo4j instance's endpoint and login details (${error.toString()})`
   );
 }
 
-const _neo4jDriver = neo4jDriver;
+const neo4jDriver = _neo4jDriver;
 
-export { _neo4jDriver };
-export default _neo4jDriver;
+export { neo4jDriver };
+export default neo4jDriver;
