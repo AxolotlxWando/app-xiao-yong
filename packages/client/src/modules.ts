@@ -2,6 +2,7 @@ import core from '@gqlapp/core-client-react';
 import look from '@gqlapp/look-client-react';
 import i18n from '@gqlapp/i18n-client-react';
 import appCounter from '@app-xiao-yong/app-workflow-client-react';
+import neo4jCrud from '@app-xiao-yong/neo4j-crud-client-react';
 import counter from '@gqlapp/counter-client-react';
 import chat from '@gqlapp/chat-client-react';
 import contact from '@gqlapp/contact-client-react';
@@ -24,6 +25,7 @@ const modules = new ClientModule(
   validation,
   defaultRouter,
   appCounter,
+  neo4jCrud,
   counter,
   post,
   upload,
