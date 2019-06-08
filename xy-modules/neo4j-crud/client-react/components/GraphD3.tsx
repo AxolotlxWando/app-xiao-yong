@@ -68,6 +68,21 @@ class Graph extends React.Component {
     // console.log(`###### gRef is nulll?????? ${this.gRef}, ${this.gRef.current}`);
     // console.log(`###### d3Graph is nulll?????? ${d3Graph}`);
 
+    this.linkData.forEach( function(data) {
+      data['source'] = data['start'];
+      delete data['start'];
+      data['target'] = data['end'];
+      delete data['end'];
+    });
+        const linkData = this.linkData;
+        const nodeData = this.nodeData;
+
+        console.log(`this.props: ${JSON.stringify(this.props)}`);
+        console.log(`this.nodeNata: ${JSON.stringify(this.nodeData)}`);
+        console.log(`nodeData: ${JSON.stringify(nodeData)}`);
+        console.log(`this.linkData: ${JSON.stringify(this.linkData)}`);
+        console.log(`linkData: ${JSON.stringify(linkData)}`);
+
     // Set up Simulation
     this.simulation = d3
       .forceSimulation()
@@ -75,11 +90,7 @@ class Graph extends React.Component {
     this.simulation
       .force('charge_force', d3.forceManyBody().strength(-100))
       .force('center_force', d3.forceCenter(width / 2, height / 2))
-      .force('links', d3.forceLink(this.linkData).id(function(d) { return d.name }));
-
-
-    const linkData = this.linkData;
-    const nodeData = this.nodeData;
+      .force('links', d3.forceLink(linkData).id(function(d) { return d.identity }));
 
     // Bind SVG shapes to data
     this.graphLinks = d3Graph
@@ -88,18 +99,32 @@ class Graph extends React.Component {
       .selectAll('line')
       .data(linkData)
       .enter()
+      .append('g')
+      .attr('class', 'link');
+    this.graphLinks
+      .append('text').text(function (d) {return d.type});
+      //.attr('fill', 'black');
+    this.graphLinks
       .append('line')
         .attr('stroke-width', 1)
         .style('stroke', 'black');
-    this.graphNode = d3Graph
+
+    this.graphNodes = d3Graph
       .append('g')
         .attr('class', 'graph-nodes')
       .selectAll('circle')
       .data(nodeData)
       .enter()
+      .append('g')
+      .attr('class', 'node');
+
+    this.graphNodes
       .append('circle')
         .attr('r', 15)
         .attr('fill', '#d3d3d3');
+    this.graphNodes
+      .append('text').text(function (d) {return d.identity});
+      //.attr('fill', 'black');
 
     // console.log(`this.graphLinks: ${JSON.stringify(this.graphLinks)}`);
     // console.log(`this.graphNodes: ${JSON.stringify(this.graphNodes)}`);
@@ -108,10 +133,19 @@ class Graph extends React.Component {
     const graphLinks = this.graphLinks;
 
     function tickUpdate() {
-      d3.selectAll('.graph-nodes circle')
+      const nodes = d3.selectAll('.graph-nodes');
+      nodes.selectAll('text')
+        .attr('x', function(d) { return d.x; })
+        .attr('y', function(d) { return d.y; });
+      nodes.selectAll('circle')
         .attr('cx', function(d) { return d.x; })
         .attr('cy', function(d) { return d.y; });
-      d3.selectAll('line')
+
+      const links = d3.selectAll('.graph-links g');
+      links.selectAll('text')
+        .attr('x', function(d) { return (d.source.x + d.target.x) / 2; })
+        .attr('y', function(d) { return (d.source.y + d.target.y) / 2; });
+      links.selectAll('line')
         .attr('x1', function(d) { return d.source.x; })
         .attr('y1', function(d) { return d.source.y; })
         .attr('x2', function(d) { return d.target.x; })
@@ -146,7 +180,7 @@ class Graph extends React.Component {
       d.fy = null;
     }
 
-    drag_handler(this.graphNode);
+    drag_handler(this.graphNodes);
   }
 
   componentWillUnmount() {
@@ -165,157 +199,17 @@ class GraphContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nodes: [
-        {"name": "Lillian", "sex": "F"},
-        {"name": "Gordon", "sex": "M"},
-        {"name": "Sylvester", "sex": "M"},
-        {"name": "Mary", "sex": "F"},
-        {"name": "Helen", "sex": "F"},
-        {"name": "Jamie", "sex": "M"},
-        {"name": "Jessie", "sex": "F"},
-        {"name": "Ashton", "sex": "M"},
-        {"name": "Duncan", "sex": "M"},
-        {"name": "Evette", "sex": "F"},
-        {"name": "Mauer", "sex": "M"},
-        {"name": "Fray", "sex": "F"},
-        {"name": "Duke", "sex": "M"},
-        {"name": "Baron", "sex": "M"},
-        {"name": "Infante", "sex": "M"},
-        {"name": "Percy", "sex": "M"},
-        {"name": "Cynthia", "sex": "F"},
-        {"name": "Feyton", "sex": "M"},
-        {"name": "Lesley", "sex": "F"},
-        {"name": "Yvette", "sex": "F"},
-        {"name": "Maria", "sex": "F"},
-        {"name": "Lexy", "sex": "F"},
-        {"name": "Peter", "sex": "M"},
-        {"name": "Ashley", "sex": "F"},
-        {"name": "Finkler", "sex": "M"},
-        {"name": "Damo", "sex": "M"},
-        {"name": "Imogen", "sex": "F"}
-      ],
-      links: [
-      	{"source": "Sylvester", "target": "Gordon", "type":"A" },
-        {"source": "Sylvester", "target": "Lillian", "type":"A" },
-        {"source": "Sylvester", "target": "Mary", "type":"A"},
-        {"source": "Sylvester", "target": "Jamie", "type":"A"},
-        {"source": "Sylvester", "target": "Jessie", "type":"A"},
-        {"source": "Sylvester", "target": "Helen", "type":"A"},
-        {"source": "Helen", "target": "Gordon", "type":"A"},
-        {"source": "Mary", "target": "Lillian", "type":"A"},
-        {"source": "Ashton", "target": "Mary", "type":"A"},
-        {"source": "Duncan", "target": "Jamie", "type":"A"},
-        {"source": "Gordon", "target": "Jessie", "type":"A"},
-        {"source": "Sylvester", "target": "Fray", "type":"E"},
-        {"source": "Fray", "target": "Mauer", "type":"A"},
-        {"source": "Fray", "target": "Cynthia", "type":"A"},
-        {"source": "Fray", "target": "Percy", "type":"A"},
-        {"source": "Percy", "target": "Cynthia", "type":"A"},
-        {"source": "Infante", "target": "Duke", "type":"A"},
-        {"source": "Duke", "target": "Gordon", "type":"A"},
-        {"source": "Duke", "target": "Sylvester", "type":"A"},
-        {"source": "Baron", "target": "Duke", "type":"A"},
-        {"source": "Baron", "target": "Sylvester", "type":"E"},
-        {"source": "Evette", "target": "Sylvester", "type":"E"},
-        {"source": "Cynthia", "target": "Sylvester", "type":"E"},
-        {"source": "Cynthia", "target": "Jamie", "type":"E"},
-        {"source": "Mauer", "target": "Jessie", "type":"E"},
-        {"source": "Duke", "target": "Lexy", "type":"A"},
-        {"source": "Feyton", "target": "Lexy", "type":"A"},
-        {"source": "Maria", "target": "Feyton", "type":"A"},
-        {"source": "Baron", "target": "Yvette", "type":"E"},
-        {"source": "Evette", "target": "Maria", "type":"E"},
-        {"source": "Cynthia", "target": "Yvette", "type":"E"},
-        {"source": "Maria", "target": "Jamie", "type":"E"},
-        {"source": "Maria", "target": "Lesley", "type":"E"},
-        {"source": "Ashley", "target": "Damo", "type":"A"},
-        {"source": "Damo", "target": "Lexy", "type":"A"},
-        {"source": "Maria", "target": "Feyton", "type":"A"},
-        {"source": "Finkler", "target": "Ashley", "type":"E"},
-        {"source": "Sylvester", "target": "Maria", "type":"E"},
-        {"source": "Peter", "target": "Finkler", "type":"E"},
-        {"source": "Ashley", "target": "Gordon", "type":"E"},
-        {"source": "Maria", "target": "Imogen", "type":"E"}
-      ]
-    }
+      nodes: [],
+      links: []
+    };
   }
 
   updateData() {
     // var newState = randomData(this.state.nodes, width, height);
     const newState = {
-      nodes: [
-        {"name": "Lillian", "sex": "F"},
-        {"name": "Gordon", "sex": "M"},
-        {"name": "Sylvester", "sex": "M"},
-        {"name": "Mary", "sex": "F"},
-        {"name": "Helen", "sex": "F"},
-        {"name": "Jamie", "sex": "M"},
-        {"name": "Jessie", "sex": "F"},
-        {"name": "Ashton", "sex": "M"},
-        {"name": "Duncan", "sex": "M"},
-        {"name": "Evette", "sex": "F"},
-        {"name": "Mauer", "sex": "M"},
-        {"name": "Fray", "sex": "F"},
-        {"name": "Duke", "sex": "M"},
-        {"name": "Baron", "sex": "M"},
-        {"name": "Infante", "sex": "M"},
-        {"name": "Percy", "sex": "M"},
-        {"name": "Cynthia", "sex": "F"},
-        {"name": "Feyton", "sex": "M"},
-        {"name": "Lesley", "sex": "F"},
-        {"name": "Yvette", "sex": "F"},
-        {"name": "Maria", "sex": "F"},
-        {"name": "Lexy", "sex": "F"},
-        {"name": "Peter", "sex": "M"},
-        {"name": "Ashley", "sex": "F"},
-        {"name": "Finkler", "sex": "M"},
-        {"name": "Damo", "sex": "M"},
-        {"name": "Imogen", "sex": "F"}
-      ],
-      links: [
-      	{"source": "Sylvester", "target": "Gordon", "type":"A" },
-        {"source": "Sylvester", "target": "Lillian", "type":"A" },
-        {"source": "Sylvester", "target": "Mary", "type":"A"},
-        {"source": "Sylvester", "target": "Jamie", "type":"A"},
-        {"source": "Sylvester", "target": "Jessie", "type":"A"},
-        {"source": "Sylvester", "target": "Helen", "type":"A"},
-        {"source": "Helen", "target": "Gordon", "type":"A"},
-        {"source": "Mary", "target": "Lillian", "type":"A"},
-        {"source": "Ashton", "target": "Mary", "type":"A"},
-        {"source": "Duncan", "target": "Jamie", "type":"A"},
-        {"source": "Gordon", "target": "Jessie", "type":"A"},
-        {"source": "Sylvester", "target": "Fray", "type":"E"},
-        {"source": "Fray", "target": "Mauer", "type":"A"},
-        {"source": "Fray", "target": "Cynthia", "type":"A"},
-        {"source": "Fray", "target": "Percy", "type":"A"},
-        {"source": "Percy", "target": "Cynthia", "type":"A"},
-        {"source": "Infante", "target": "Duke", "type":"A"},
-        {"source": "Duke", "target": "Gordon", "type":"A"},
-        {"source": "Duke", "target": "Sylvester", "type":"A"},
-        {"source": "Baron", "target": "Duke", "type":"A"},
-        {"source": "Baron", "target": "Sylvester", "type":"E"},
-        {"source": "Evette", "target": "Sylvester", "type":"E"},
-        {"source": "Cynthia", "target": "Sylvester", "type":"E"},
-        {"source": "Cynthia", "target": "Jamie", "type":"E"},
-        {"source": "Mauer", "target": "Jessie", "type":"E"},
-        {"source": "Duke", "target": "Lexy", "type":"A"},
-        {"source": "Feyton", "target": "Lexy", "type":"A"},
-        {"source": "Maria", "target": "Feyton", "type":"A"},
-        {"source": "Baron", "target": "Yvette", "type":"E"},
-        {"source": "Evette", "target": "Maria", "type":"E"},
-        {"source": "Cynthia", "target": "Yvette", "type":"E"},
-        {"source": "Maria", "target": "Jamie", "type":"E"},
-        {"source": "Maria", "target": "Lesley", "type":"E"},
-        {"source": "Ashley", "target": "Damo", "type":"A"},
-        {"source": "Damo", "target": "Lexy", "type":"A"},
-        {"source": "Maria", "target": "Feyton", "type":"A"},
-        {"source": "Finkler", "target": "Ashley", "type":"E"},
-        {"source": "Sylvester", "target": "Maria", "type":"E"},
-        {"source": "Peter", "target": "Finkler", "type":"E"},
-        {"source": "Ashley", "target": "Gordon", "type":"E"},
-        {"source": "Maria", "target": "Imogen", "type":"E"}
-      ]
-    }
+      nodes: [],
+      links: []
+    };
     this.setState(newState);
   }
 
@@ -326,13 +220,19 @@ class GraphContainer extends React.Component {
   render() {
     return (
       <div>
+        <Graph nodes={this.props.nodes} links={this.props.links} />
         <div className="update" onClick={this.updateData}>update</div>
-        <Graph nodes={this.state.nodes} links={this.state.links} />
+        <div>
+          Query Result:
+          Props: {JSON.stringify(this.props, null, '  ')}
+          Nodes: {JSON.stringify(this.props.nodes, null, '  ')}
+          Links: {JSON.stringify(this.props.links, null, '  ')}
+        </div>
       </div>
     );
   }
 }
 
-<div class="update" onClick="update()">update</update>
+// <div class="update" onClick="update()">update</update>
 
 export default GraphContainer;

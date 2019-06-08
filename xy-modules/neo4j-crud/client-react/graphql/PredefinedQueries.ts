@@ -1,10 +1,7 @@
 import gql from 'graphql-tag';
 
-export const GET_ALL_NODES = gql`
-`;
-
 export const GET_ALL_NODES_AND_RELATIONSHIPS = gql`
-  mutation {
+  query getAllNodesAndRelationships {
     getAllNodesAndRelationships {
       nodes {
         identity
@@ -17,5 +14,6 @@ export const GET_ALL_NODES_AND_RELATIONSHIPS = gql`
         start
         end
       }
+
   }
 `;

@@ -1,5 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import { Query } from 'react-apollo';
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
 
@@ -49,7 +50,15 @@ const Counter = ({ t }: CounterProps) => (
       ]}
     />
     Hello Neo4j CRUD
-    <GraphD3 />
+
+    <Query query={ GET_ALL_NODES_AND_RELATIONSHIPS }>
+      {({ data, loading, error }) => {
+        if (loading) return <p>Content is loading...</p>;
+        if (error) return <p>ERROR</p>;
+        return <GraphD3 nodes={data.getAllNodesAndRelationships.nodes} links={data.getAllNodesAndRelationships.relationships}/>;
+      }}
+    </Query>
+
     <div>
       <p>with a flex: 1 (grow) col</p>
       <StyledRow type="flex">
