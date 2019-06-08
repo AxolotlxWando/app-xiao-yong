@@ -1,0 +1,174 @@
+import gql from 'graphql-tag';
+
+export default gql`
+  # Database counter
+  type Counter {
+    # Current amount
+    amount: Int!
+  }
+
+  extend type Query {
+    # Counter
+    serverCounter: Counter
+  }
+
+  extend type Mutation {
+    # Increase counter value, returns current counter amount
+    addServerCounter(
+      # Amount to add to counter
+      amount: Int!
+    ): Counter
+  }
+
+  extend type Subscription {
+    # Subscription fired when anyone increases counter
+    counterUpdated: Counter
+  }
+`;
+
+
+    # App
+    getApp: XYAppSpec
+    getAppInstance: XYAppInstance
+    getXYUserDB: XYUserDB
+    getXYUserSession: XYUserSession
+
+    +
+    +# XY App
+    +type XYAppSpec {
+    +  identity: Int!
+    +  labels: [String]!
+    +  name: String!
+    +  version: String!
+    +}
+    +
+    +type XYAppInstance {
+    +  identity: Int!
+    +  labels: [String]!
+    +  uuid: String!
+    +  ofAppSpec: XYAppSpec!
+    +}
+    +
+    +type XYUserProfile {
+    +  identity: Int!
+    +  firstname: String!
+    +  lastname: String!
+    +  email: String
+    +}
+    +
+    +type XYUserDB {
+    +  identity: Int!
+    +  labels: [String]!
+    +  hasUserProfile: XYUserProfile
+    +  hasUserContent: XYContentDirectory
+    +}
+    +
+    +type XYUserSession {
+    +  identity: Int!
+    +  uuid: String!
+    +  ofAppSpec: XYAppSpec
+    +  ofAppInstance: XYAppInstance
+    +  ofUserDB: XYUserDB
+    +}
+    +
+    +# XY Meta
+    +type XYTaxonomy {
+    +  identity: Int!
+    +  name: String!
+    +  description: String!
+    +}
+    +
+    +type XYTag {
+    +  identity: Int!
+    +  ofTaxonomy: Int!
+    +  hasParentTag: Int!
+    +  name: String!
+    +  description: String!
+    +}
+    +
+    +type XYTaxonomyTags {
+    +  identity: Int!
+    +  ofTaxonomy: Int!
+    +  hasTags: [Int]!
+    +}
+    +
+    +# XY Content
+    +type XYContentDirectory {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: String!
+    +  create: DateTime!
+    +  modified: DateTime!
+    +  hasTaxonomyTags: [Int]!
+    +  hasParentDirectory: Int!
+    +  hasChildDirectories: [Int]!
+    +  hasChildFiles: [Int]!
+    +}
+    +
+    +type XYContentFile {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: String!
+    +  create: DateTime!
+    +  modified: DateTime!
+    +  hasTaxonomyTags: [Int]!
+    +  parentDirectory: Int!
+    +  ofContentType: Int!
+    +  hasData: Int!
+    +}
+    +
+    +type XYContentType {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: String!
+    +  description: String!
+    +}
+    +
+    +# XY Workflow
+    +type XYWorkflowSpec {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: Int!
+    +  description: String!
+    +}
+    +
+    +type XYWorkflowStepSpec {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: Int!
+    +  description: String!
+    +  previousStep: Int!
+    +  nextStep: Int!
+    +}
+    +
+    +type XYWorkflowGatewaySpec {
+    +  identity: Int!
+    +  uuid: String!
+    +  name: Int!
+    +  description: String!
+    +  parentStep: Int!
+    +}
+    +
+    +type XYWorkflowRT {
+    +  identity: Int!
+    +  workflowSpec: XYWorkflowSpec
+    +  startStep: XYWorkflowRTStep
+    +  currentStatus: XYWorkflowRTStep
+    +}
+    +
+    +type XYWorkflowRTStep {
+    +  identity: Int!
+    +  ofWorkflowStepSpec: Int!
+    +  name: Int!
+    +  description: String!
+    +  previousStep: Int!
+    +  nextStep: Int!
+    +}
+    +
+    +type XYWorkflowRTGateway {
+    +  identity: Int!
+    +  ofWorkflowGatewaySpec: Int!
+    +  name: Int!
+    +  description: String!
+    +  parentStep: Int!
+    +}

@@ -74,7 +74,7 @@ interface RelationshipShape {
 
 export default class Neo4jQueries {
   public moviesQuery(searchKeyword: string) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH (movie:Movie) \
         WHERE movie.title =~ {title} \
@@ -92,7 +92,7 @@ export default class Neo4jQueries {
   }
 
   public getAllNodes() {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH (n) RETURN n')
       .then((result: ResultShape) => {
@@ -108,7 +108,7 @@ export default class Neo4jQueries {
   }
 
   public getAllNodesAndRelationships() {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return Promise.all([session.run('MATCH (n) RETURN n'), session.run('MATCH ()-[r]-() RETURN r')])
       .then((result: ResultShape[]) => {
         session.close();
@@ -130,7 +130,7 @@ export default class Neo4jQueries {
 
   /* Neo4j CRUD - Node */
   public readNode(identity: number) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH (n) WHERE ID(n) = {identity} RETURN n', { identity: neo4j.int(identity) })
       .then((result: ResultShape) => {
@@ -144,7 +144,7 @@ export default class Neo4jQueries {
   }
 
   public createNode(labels: string[] = [], properties: any = {}) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('CREATE (n' + toLabelsString(labels) + ') \
         SET n = $properties \
@@ -160,7 +160,7 @@ export default class Neo4jQueries {
   }
 
   public updateNode(identity: number, labels: string[] = [], properties: any = {}) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run(
         'MATCH (n) \
@@ -190,7 +190,7 @@ export default class Neo4jQueries {
   }
 
   public deleteNode(identity: number) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH (n) WHERE ID(n) = $identity DELETE n', { identity: neo4j.int(identity) })
       .then((result: ResultShape) => {
@@ -205,7 +205,7 @@ export default class Neo4jQueries {
 
   /* Neo4j CRUD - Relationship */
   public readRelationship(identity: number) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH ()-[r]->() WHERE ID(r) = {identity} RETURN r', { identity: neo4j.int(identity) })
       .then((result: ResultShape) => {
@@ -219,7 +219,7 @@ export default class Neo4jQueries {
   }
 
   public createRelationship(type: string = '', start: number, end: number, properties: any = {}) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run(
         'MATCH (s),(o) WHERE ID(s) = $start AND ID(o) = $end \
@@ -241,7 +241,7 @@ export default class Neo4jQueries {
   }
 
   public updateRelationship(identity: number, type: string = '', start: number, end: number, properties: any = {}) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     if (type === '') {
       return session
         .run(
@@ -300,7 +300,7 @@ export default class Neo4jQueries {
   }
 
   public deleteRelationship(identity: number) {
-    const session = driver.session();
+    const session = neo4jDriver.session();
     return session
       .run('MATCH ()-[r]->() WHERE ID(r) = $identity DELETE r', { identity: neo4j.int(identity) })
       .then((result: ResultShape) => {
