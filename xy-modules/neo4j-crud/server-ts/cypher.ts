@@ -315,9 +315,9 @@ export default class Neo4jQueries {
 
   private movieModal(record: RecordShape): MovieShape {
     return {
-      title: record.get('movie').properties.title,
-      released: record.get('movie').properties.released,
-      tagline: record.get('movie').properties.tagline
+      title: (record.get('movie') as NodeFieldShape).properties.title,
+      released: (record.get('movie') as NodeFieldShape).properties.released,
+      tagline: (record.get('movie') as NodeFieldShape).properties.tagline
     };
   }
 

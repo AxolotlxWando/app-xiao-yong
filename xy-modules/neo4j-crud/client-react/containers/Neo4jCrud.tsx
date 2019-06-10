@@ -15,13 +15,13 @@ interface CounterProps {
   t: TranslateFunction;
 }
 
-const MyRow = (props) => {
+const MyRow = (props: any) => {
   return (
     <Row className={props.className} type={props.type} justify={props.justify}>
-      { props.children }
+      {props.children}
     </Row>
   );
-}
+};
 
 const StyledRow = styled(MyRow)`
   > .ant-col:nth-of-type(even) {
@@ -30,11 +30,11 @@ const StyledRow = styled(MyRow)`
   }
   > .ant-col:nth-of-type(odd) {
     padding: 16px 0;
-    background: #4CBCEF;
+    background: #4cbcef;
   }
 `;
 
-let FlexGrowCol = styled.div`
+const FlexGrowCol = styled.div`
   flex: 1;
 `;
 
@@ -50,15 +50,22 @@ const Counter = ({ t }: CounterProps) => (
       ]}
     />
     Hello Neo4j CRUD
-
-    <Query query={ GET_ALL_NODES_AND_RELATIONSHIPS }>
-      {({ data, loading, error }) => {
-        if (loading) return <p>Content is loading...</p>;
-        if (error) return <p>ERROR</p>;
-        return <GraphD3 nodes={data.getAllNodesAndRelationships.nodes} links={data.getAllNodesAndRelationships.relationships}/>;
+    <Query query={GET_ALL_NODES_AND_RELATIONSHIPS}>
+      {({ data, loading, error }: any) => {
+        if (loading) {
+          return <p>Content is loading...</p>;
+        }
+        if (error) {
+          return <p>ERROR</p>;
+        }
+        return (
+          <GraphD3
+            nodes={data.getAllNodesAndRelationships.nodes}
+            links={data.getAllNodesAndRelationships.relationships}
+          />
+        );
       }}
     </Query>
-
     <div>
       <p>with a flex: 1 (grow) col</p>
       <StyledRow type="flex">
@@ -66,16 +73,16 @@ const Counter = ({ t }: CounterProps) => (
         <Col span={4}>col-4</Col>
         <Col span={4}>col-4</Col>
         <Col span={4}>col-4</Col>
-        <FlexGrowCol className={"ant-col"}>flex: 1</FlexGrowCol>
+        <FlexGrowCol className={'ant-col'}>flex: 1</FlexGrowCol>
       </StyledRow>
 
       <p>nested span=4 and flex: 1 (grow) columns</p>
       <StyledRow type="flex">
         <Col span={4}>col-4</Col>
-        <FlexGrowCol className={"ant-col"}>
+        <FlexGrowCol className={'ant-col'}>
           <StyledRow type="flex">
             <Col span={4}>col-4</Col>
-            <FlexGrowCol className={"ant-col"}>flex: 1</FlexGrowCol>
+            <FlexGrowCol className={'ant-col'}>flex: 1</FlexGrowCol>
             <Col span={4}>col-4</Col>
             <Col span={4}>col-4</Col>
           </StyledRow>
@@ -129,7 +136,8 @@ const Counter = ({ t }: CounterProps) => (
         <Col span={4}>col-4</Col>
         <Col span={4}>col-4</Col>
       </StyledRow>
-    </div>,
+    </div>
+    ,
   </PageLayout>
 );
 

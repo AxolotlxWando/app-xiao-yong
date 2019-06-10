@@ -1,5 +1,3 @@
-const COUNTER_SUBSCRIPTION = 'counter_subscription';
-
 export default (pubsub: any) => ({
   Query: {
     async neo4jMovies(obj: any, args: any, context: any) {

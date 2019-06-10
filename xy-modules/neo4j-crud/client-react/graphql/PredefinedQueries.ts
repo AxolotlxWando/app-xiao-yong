@@ -14,6 +14,6 @@ export const GET_ALL_NODES_AND_RELATIONSHIPS = gql`
         start
         end
       }
-
+    }
   }
 `;
