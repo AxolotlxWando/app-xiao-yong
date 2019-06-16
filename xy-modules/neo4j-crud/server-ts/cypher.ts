@@ -109,7 +109,7 @@ export default class Neo4jQueries {
 
   public getAllNodesAndRelationships() {
     const session = neo4jDriver.session();
-    return Promise.all([session.run('MATCH (n) RETURN n'), session.run('MATCH ()-[r]-() RETURN r')])
+    return Promise.all([session.run('MATCH (n) RETURN n'), session.run('MATCH ()-[r]->() RETURN r')])
       .then((result: ResultShape[]) => {
         session.close();
         const nodes: NodeShape[] = [];

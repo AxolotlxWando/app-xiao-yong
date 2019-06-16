@@ -97,6 +97,7 @@
     "react-router-dom": "^4.2.2",
     "react-stripe-elements": "^1.2.1",
     "react-transition-group": "^2.3.0-beta.0",
+    "react-vis": "^1.11.7",
     "reactstrap": "^5.0.0-beta",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.2",
