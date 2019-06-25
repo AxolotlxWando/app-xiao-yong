@@ -9,7 +9,7 @@ import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 
 import { GET_ALL_NODES_AND_RELATIONSHIPS } from '../graphql/PredefinedQueries';
-import GraphD3 from '../components/GraphD3';
+import GraphD4 from '../components/GraphD4';
 
 interface CounterProps {
   t: TranslateFunction;
@@ -59,7 +59,7 @@ const Counter = ({ t }: CounterProps) => (
           return <p>ERROR</p>;
         }
         return (
-          <GraphD3
+          <GraphD4
             nodes={data.getAllNodesAndRelationships.nodes}
             links={data.getAllNodesAndRelationships.relationships}
           />
