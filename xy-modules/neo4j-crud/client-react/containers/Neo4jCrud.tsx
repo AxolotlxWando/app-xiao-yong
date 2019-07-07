@@ -9,6 +9,7 @@ import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 
 import { GET_ALL_NODES_AND_RELATIONSHIPS } from '../graphql/PredefinedQueries';
+import { READ_NODE } from '../graphql/NodeCRUD';
 import GraphD4 from '../components/GraphD4';
 
 interface CounterProps {
@@ -49,6 +50,21 @@ const Counter = ({ t }: CounterProps) => (
         }
       ]}
     />
+    <Query query={READ_NODE} variables={{ input: 0 }}>
+      {({ data, loading, error }: any) => {
+        if (loading) {
+          return <p>Content is loading...</p>;
+        }
+        if (error) {
+          return <p>`ERROR: ${error.message}`</p>;
+        }
+        const node = data.readNode;
+        const message = `identity: ${node.identity}, labels: ${JSON.stringify(
+          node.labels
+        )}}, properties: ${JSON.stringify(node.properties)}`;
+        return <p>{message}</p>;
+      }}
+    </Query>
     Hello Neo4j CRUD
     <Query query={GET_ALL_NODES_AND_RELATIONSHIPS}>
       {({ data, loading, error }: any) => {
