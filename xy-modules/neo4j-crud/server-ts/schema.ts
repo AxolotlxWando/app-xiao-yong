@@ -39,11 +39,16 @@ export default gql`
     readRelationship(identity: Int!): Relationship
   }
 
+  input UpdateInput {
+    labels: [String]
+    properties: JSON
+  }
+
   extend type Mutation {
     ### Neo4j CRUD - Node ###
     createNode(labels: [String], properties: JSON): Node
 
-    updateNode(identity: Int!, labels: [String], properties: JSON): Node
+    updateNode(identity: Int!, data: UpdateInput!): Node
 
     deleteNode(identity: Int!): Boolean
 

@@ -1,15 +1,17 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
+
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 
 import { PageLayout } from '@gqlapp/look-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 
 import { GET_ALL_NODES_AND_RELATIONSHIPS } from '../graphql/PredefinedQueries';
-import { READ_NODE } from '../graphql/NodeCRUD';
+import { READ_NODE, UPDATE_NODE } from '../graphql/NodeCRUD';
 import GraphD4 from '../components/GraphD4';
 
 interface CounterProps {
@@ -50,7 +52,7 @@ const Counter = ({ t }: CounterProps) => (
         }
       ]}
     />
-    <Query query={READ_NODE} variables={{ input: 0 }}>
+    <Query query={READ_NODE} variables={{ identity: 0 }}>
       {({ data, loading, error }: any) => {
         if (loading) {
           return <p>Content is loading...</p>;
@@ -62,7 +64,48 @@ const Counter = ({ t }: CounterProps) => (
         const message = `identity: ${node.identity}, labels: ${JSON.stringify(
           node.labels
         )}}, properties: ${JSON.stringify(node.properties)}`;
-        return <p>{message}</p>;
+
+        return (
+          <div>
+            {message}
+            <Mutation mutation={UPDATE_NODE}>
+              {(updateNode, { data }) => (
+                <Formik
+                  initialValues={node /* { identity, labels, properties } */}
+                  onSubmit={(values, actions) => {
+                    console.log(`node: ${JSON.stringify(node)}`);
+                    node.labels.push(`${node.labels[0]}${node.labels.length}`);
+                    // node.labels = ['Movie'];
+                    updateNode({
+                      variables: {
+                        identity: node.identity,
+                        data: {
+                          labels: node.labels
+                        }
+                      }
+                    });
+                  }}
+                  render={({ errors, status, touched, isSubmitting }) => (
+                    <Form>
+                      <Field type="number" name="identity" />
+                      <ErrorMessage name="identity" component="div" />
+                      <Field type="text" className="error" name="labels" />
+                      <ErrorMessage name="labels">
+                        {errorMessage => <div className="error">{errorMessage}</div>}
+                      </ErrorMessage>
+                      <Field type="text" name="properties" />
+                      <ErrorMessage name="properties" className="error" component="div" />
+                      {status && status.msg && <div>{status.msg}</div>}
+                      <button type="submit" disabled={isSubmitting}>
+                        Submit
+                      </button>
+                    </Form>
+                  )}
+                />
+              )}
+            </Mutation>
+          </div>
+        );
       }}
     </Query>
     Hello Neo4j CRUD

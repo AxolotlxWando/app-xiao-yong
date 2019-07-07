@@ -23,7 +23,7 @@ export default (pubsub: any) => ({
       return context.Neo4jCrud.createNode(args.labels, args.properties);
     },
     async updateNode(obj: any, args: any, context: any) {
-      return context.Neo4jCrud.updateNode(args.identity, args.labels, args.properties);
+      return context.Neo4jCrud.updateNode(args.identity, args.data.labels, args.data.properties);
     },
     async deleteNode(obj: any, args: any, context: any) {
       return context.Neo4jCrud.deleteNode(args.identity);

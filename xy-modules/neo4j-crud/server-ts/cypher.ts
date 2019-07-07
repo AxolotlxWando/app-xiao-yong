@@ -161,6 +161,7 @@ export default class Neo4jQueries {
 
   public updateNode(identity: number, labels: string[] = [], properties: any = {}) {
     const session = neo4jDriver.session();
+    console.log(`Updating node, identity, labels, properties: ${identity}, ${labels}, ${properties}`);
     return session
       .run(
         'MATCH (n) \
