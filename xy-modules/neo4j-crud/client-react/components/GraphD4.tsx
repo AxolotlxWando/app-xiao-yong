@@ -21,6 +21,7 @@ interface D4LinkData {
 interface IProps {
   nodes: [NodeShape];
   links: [RelationshipShape];
+  setSelectedNode(id: number): void;
 }
 
 const GraphD4: React.FC<IProps> = (props: IProps) => {
@@ -56,7 +57,9 @@ const GraphD4: React.FC<IProps> = (props: IProps) => {
       }}
     >
       {d4NodesData.map((d4NodeData: D4NodeData, index: number) => {
-        return <ForceGraphNodeWithDrag key={index} node={d4NodeData} fill="grey" />;
+        return (
+          <ForceGraphNodeWithDrag key={index} node={d4NodeData} setSelectedNode={props.setSelectedNode} fill="grey" />
+        );
       })}
       {d4LinksData.map((d4LinkData: D4LinkData, index: number) => {
         return <ForceGraphLink key={index} link={d4LinkData} />;

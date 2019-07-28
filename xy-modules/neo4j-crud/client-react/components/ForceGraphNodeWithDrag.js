@@ -29,6 +29,7 @@ export default class ForceGraphNode extends PureComponent {
     return {
       nodeOnDrag: PropTypes.number,
       setNodeOnDrag: PropTypes.func,
+      setSelectedNode: PropTypes.func,
       simulation: simulationPropTypes,
       node: nodePropTypes.isRequired,
       cx: PropTypes.number,
@@ -38,7 +39,7 @@ export default class ForceGraphNode extends PureComponent {
       // these props only have an impact on the parent.
       labelStyle: PropTypes.object,
       labelClass: PropTypes.string,
-      showLabel: PropTypes.bool,
+      showLabel: PropTypes.bool
     };
   }
 
@@ -48,12 +49,12 @@ export default class ForceGraphNode extends PureComponent {
       fill: '#333',
       opacity: 1,
       stroke: '#FFF',
-      strokeWidth: 1.5,
+      strokeWidth: 1.5
     };
   }
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.drag_start = this.drag_start.bind(this);
   }
@@ -61,33 +62,34 @@ export default class ForceGraphNode extends PureComponent {
   drag_start(e) {
     this.props.simulation.alphaTarget(0.3).restart();
     this.props.setNodeOnDrag(this.props.nodeIndex);
+    this.props.setSelectedNode(this.props.nodeIndex);
   }
 
   render() {
     const {
-      node, className, r,
+      node,
+      className,
+      r,
       /* eslint-disable no-unused-vars */
-      labelStyle, labelClass, showLabel,
+      labelStyle,
+      labelClass,
+      showLabel,
       /* eslint-enable no-unused-vars */
       nodeOnDrag,
       nodeIndex,
       setNodeOnDrag,
+      setSelectedNode,
       ...spreadable
     } = this.props;
 
-    if(!node) {
-      return (null);
+    if (!node) {
+      return null;
     }
 
     const { radius = 5 } = node;
 
     return (
-      <circle
-        onMouseDown={this.drag_start}
-        className={`rv-force__node ${className}`}
-        r={r || radius}
-        {...spreadable}
-      />
+      <circle onMouseDown={this.drag_start} className={`rv-force__node ${className}`} r={r || radius} {...spreadable} />
     );
   }
 }
